@@ -1,73 +1,59 @@
-# Welcome to your Lovable project
+# 미라클 머닝
+매일 상큼한 미라클 모닝을 하기 원하는 분들! 미라클 모닝 하면서 돈을 벌고 싶은 사람들을 위한 최적의 서비스!
 
-## Project info
 
-**URL**: https://lovable.dev/projects/8348355c-2225-4bb9-a9ca-78231cf55744
+## 사용자
 
-## How can I edit this code?
+아침에 일찍 일어나기 원하는 사람들
 
-There are several ways of editing your application.
+- 직장인: 아침 일찍 일어나 직장에 출근해야 하는 사람.
+- 고시생: 하루종일 공부해야 하며 용돈을 벌 기회가 없는 사람.
+- 학생: 아침 일찍 일어나 학교에 등교해야 하며, 자신의 활동을 게시하고 싶은 사람.
 
-**Use Lovable**
+## 페르소나
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/8348355c-2225-4bb9-a9ca-78231cf55744) and start prompting.
+- 직장인
+    - 이름: 김철수
+    - 역할: 우아한형제들 백엔드 개발자
+    - 목표: 매일 아침 반 강제적으로 일찍 일어날 수 있었으면 좋겠다.
+    - 니즈: 매일 아침 알람 기능, 기상 실패 시 벌칙
+- 고시생
+    - 이름: 김민수
+    - 나이: 28세
+    - 역할: CPA 준비생
+    - 목표: 공부를 꾸준히 하는 것만으로 용돈을 벌 수 있었으면 좋겠다.
+    - 니즈: 용돈 벌이
+- 학생
+    - 이름: 박영희
+    - 나이: 21세
+    - 역할: 대학생
+    - 목표: 내가 부지런하다는 것을 사람들에게 알리고 싶다.
+    - 니즈: 나의 기상 정보를 알릴 수 있는 커뮤니티 시스템
 
-Changes made via Lovable will be committed automatically to this repo.
+## 사용자 시나리오
 
-**Use your preferred IDE**
+| 페르소나 | 시나리오 | 요구사항 |
+| --- | --- | --- |
+| 직장인 | 내일 아침 일찍 출근해야 하는 김철수는 오늘도 잠자리에 들기 전에 미라클 머닝 앱에서 아침 6시에 알람을 설정합니다. 주어진 알람 목록에서는 원하는 알람 소리가 없어서 김철수 씨가 평소 좋아하는 연예인의 노래로 알람을 설정합니다. 마음 편히 잠자리에 들었으나 다음 날 아침 공교롭게도 알람 소리를 듣지 못했습니다. 김철수가 미리 앱에 충전해둔 크레딧 중 1000원이 차감되었습니다. | 1. 알람 기능
+2. 알람 소리 목록 제공
+3. 알람 소리 커스텀 기능
+4. 크레딧 충전 기능
+5. 기상 실패 시 크레딧 차감 기능 |
+| 고시생 | CPA를 준비하는 고시생 김민수는 어제와 다름 없이 오늘도 아침 7시부터 독서실로 향한다. 미라클 머닝에서 제공하는 반 강제 알람 덕분에 다행히 아침 일찍 일어날 수 있었다.
+김민수는 일주일 내내 하루종일 독서실에서 공부만 하는 탓에 아르바이트와 같은 용돈 벌이를 할 수 없다. 그러나 매일 꾸준히 미라클 모닝에 성공한 김민수는 미라클 머닝에 쌓인 크레딧을 환전하여 쏠쏠한 용돈을 벌며 생활할 수 있었다. | 1. 기상 성공 시 크레딧 적립 기능
+2. 연속 기상 성공 시 크레딧 적립 비율 증가 기능
+3. 크레딧을 현금으로 환전하는 기능 |
+| 학생 | 매일 아침 일찍 꾸준히 기상하고 있는 대학생 박영희는 미라클 머닝 앱에 굉장히 많은 크레딧이 쌓였다. 돈으로 환전하는 것도 좋지만, 그녀는 자신이 꾸준히 미라클 모닝에 성공했다는 것을 다른 사람들에게 자랑하고 싶어 했다. 미라클 머닝에서 제공하는 캐릭터 꾸미기 시스템에서 적립한 크레딧으로 다양한 치장 아이템을 구매하여 캐릭터를 이쁘장하게 꾸몄고, 주변 다른 친구들은 박영희의 캐릭터를 보며 놀라워했다. | 1. 캐릭터 꾸미기 기능
+2. 크레딧으로 캐릭터 아이템 구매 기능
+3. 다른 사람의 캐릭터를 구경할 수 있는 기능 |
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 핵심 기능
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/8348355c-2225-4bb9-a9ca-78231cf55744) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- 아침 시간대(05시~08시)에 원하는 시간에 알람을 설정한다.
+    - 알람을 설정하기 위해서는 5천원 이상의 크레딧이 충전되어 있어야 한다.
+    - 알람을 맞추고, 2분 뒤에 기상 확인 여부를 묻는 푸시 알람이 발송된다 (무음)
+        - 푸시 알람을 1분 이내에 클릭에 성공하면 미라클 모닝 성공이며, 클릭 실패 시 미라클 모닝에 실패한다.
+- 알람을 맞춰놓고 미라클 모닝에 실패한 사람은 크레딧에서 1000원이 차감되며, 연속으로 실패 시 전날의 2배가 차감된다. 차감된 크레딧은 모두 모아 당일 미라클 모닝에 성공한 사람들에게 모두 골고루 크레딧이 분배된다.
+- 크레딧은 만원 이상 적립 시 만원 단위로 현금화할 수 있다.
+- 캐릭터를 꾸미는 기능이 제공되며, 친구를 맺거나 전체 랭킹에서 본인과 다른 사람의 캐릭터를 확인할 수 있다.
+    - 캐릭터 치장 아이템은 크레딧으로 구매할 수 있다.
