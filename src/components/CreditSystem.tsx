@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { CreditCard, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 
@@ -144,10 +143,10 @@ const CreditSystem = ({ user, setUser }: CreditSystemProps) => {
                   <span className="text-2xl mr-3">✅</span>
                   <div>
                     <p className="font-bold text-green-800">기상 성공</p>
-                    <p className="text-sm text-green-600">실패자 크레딧 분배</p>
+                    <p className="text-sm text-green-600">성공자/실패자 수에 따라 랜덤 분배</p>
                   </div>
                 </div>
-                <span className="font-bold text-green-600">+500~2,000원</span>
+                <span className="font-bold text-green-600">매일 다름</span>
               </div>
               
               <div className="flex items-center justify-between p-3 bg-blue-50 rounded-xl">

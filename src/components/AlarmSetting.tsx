@@ -108,25 +108,6 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
               <span>08:00</span>
             </div>
           </div>
-          
-          <div className="grid grid-cols-4 gap-2 max-h-32 overflow-y-auto">
-            {timeSlots.map((time) => (
-              <button
-                key={time}
-                onClick={() => {
-                  setSelectedTime(time);
-                  setTimeIndex(timeSlots.indexOf(time));
-                }}
-                className={`p-2 rounded-lg text-sm font-medium transition-all ${
-                  selectedTime === time
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {time}
-              </button>
-            ))}
-          </div>
         </div>
         
         <div className="mt-4 p-3 bg-blue-50 rounded-xl">
