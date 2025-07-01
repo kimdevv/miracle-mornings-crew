@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Clock } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
 
 interface AlarmSettingProps {
   user: any;
@@ -12,9 +13,26 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
   const [customSound, setCustomSound] = useState(false);
   const [penaltyAmount, setPenaltyAmount] = useState(1000);
 
-  const timeSlots = [
-    '05:00', '05:30', '06:00', '06:30', '07:00', '07:30', '08:00'
-  ];
+  // 05:00부터 08:00까지 15분 단위로 시간 생성
+  const generateTimeSlots = () => {
+    const slots = [];
+    for (let hour = 5; hour <= 8; hour++) {
+      for (let minute = 0; minute < 60; minute += 15) {
+        const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        slots.push(timeString);
+      }
+    }
+    return slots;
+  };
+
+  const timeSlots = generateTimeSlots();
+  const [timeIndex, setTimeIndex] = useState(timeSlots.indexOf(selectedTime));
+
+  const handleTimeChange = (value: number[]) => {
+    const newIndex = value[0];
+    setTimeIndex(newIndex);
+    setSelectedTime(timeSlots[newIndex]);
+  };
 
   const handleSetAlarm = () => {
     if (user.credits < 5000) {
@@ -60,27 +78,55 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
         </div>
       </div>
 
-      {/* 시간 선택 */}
+      {/* 시간 선택 스크롤 */}
       <div className="bg-white rounded-2xl p-5 shadow-sm border border-pink-100">
         <h3 className="font-bold text-gray-800 mb-4 flex items-center">
           <span className="text-purple-500 mr-2">⏰</span>
           알람 시간 선택
         </h3>
         
-        <div className="grid grid-cols-4 gap-3">
-          {timeSlots.map((time) => (
-            <button
-              key={time}
-              onClick={() => setSelectedTime(time)}
-              className={`p-3 rounded-xl font-bold transition-all ${
-                selectedTime === time
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg scale-105'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              {time}
-            </button>
-          ))}
+        <div className="space-y-6">
+          <div className="text-center">
+            <div className="text-4xl font-bold text-purple-600 mb-2">
+              {selectedTime}
+            </div>
+            <p className="text-sm text-gray-600">선택된 알람 시간</p>
+          </div>
+          
+          <div className="px-4">
+            <Slider
+              value={[timeIndex]}
+              onValueChange={handleTimeChange}
+              max={timeSlots.length - 1}
+              min={0}
+              step={1}
+              className="w-full"
+            />
+            <div className="flex justify-between text-xs text-gray-500 mt-2">
+              <span>05:00</span>
+              <span>06:30</span>
+              <span>08:00</span>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-4 gap-2 max-h-32 overflow-y-auto">
+            {timeSlots.map((time) => (
+              <button
+                key={time}
+                onClick={() => {
+                  setSelectedTime(time);
+                  setTimeIndex(timeSlots.indexOf(time));
+                }}
+                className={`p-2 rounded-lg text-sm font-medium transition-all ${
+                  selectedTime === time
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {time}
+              </button>
+            ))}
+          </div>
         </div>
         
         <div className="mt-4 p-3 bg-blue-50 rounded-xl">
@@ -168,7 +214,7 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
         
         <div className="mt-4 p-3 bg-yellow-100 rounded-xl">
           <p className="text-sm text-yellow-800">
-            <strong>💡 성공하면:</strong> 실패자들의 크레딧이 성공자들에게 분배됩니다!
+            <strong>💡 성공하면:</strong> 실패자들의 크레딧이 성공자들에게 균등 분배됩니다!
           </p>
         </div>
       </div>

@@ -51,7 +51,7 @@ const CharacterCustomization = ({ user, setUser }: CharacterCustomizationProps) 
     }
   };
 
-  // 캐릭터 렌더링 함수 (개선된 버전)
+  // 캐릭터 렌더링 함수
   const renderCharacter = (character: any) => (
     <svg width="120" height="120" viewBox="0 0 100 100" className="animate-bounce">
       <g>
@@ -120,10 +120,10 @@ const CharacterCustomization = ({ user, setUser }: CharacterCustomizationProps) 
           {renderCharacter(previewCharacter)}
         </div>
         
-        <div className="flex items-center justify-center space-x-4">
+        <div className="flex items-center justify-center space-x-8">
           <div className="text-center">
-            <p className="text-lg font-bold text-gray-800">레벨 {user.character.level}</p>
-            <p className="text-sm text-gray-600">{user.name}</p>
+            <p className="text-lg font-bold text-gray-800">{user.name}</p>
+            <p className="text-sm text-gray-600">내 캐릭터</p>
           </div>
           <div className="text-center">
             <p className="text-lg font-bold text-yellow-600">{user.credits.toLocaleString()}원</p>
@@ -225,29 +225,6 @@ const CharacterCustomization = ({ user, setUser }: CharacterCustomizationProps) 
           <p className="text-sm text-blue-800">
             <strong>컬렉션 3/8 달성!</strong> 더 많은 아이템을 모아보세요 ✨
           </p>
-        </div>
-      </div>
-
-      {/* 레벨 업 정보 */}
-      <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-5 border border-green-200">
-        <h3 className="font-bold text-gray-800 mb-3 flex items-center">
-          <span className="text-green-500 mr-2">📈</span>
-          레벨 업 혜택
-        </h3>
-        
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-gray-700">현재 레벨</span>
-            <span className="font-bold text-green-600">Lv.{user.character.level}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-gray-700">다음 레벨까지</span>
-            <span className="font-bold text-blue-600">2일 연속 성공</span>
-          </div>
-        </div>
-        
-        <div className="mt-3 bg-white rounded-xl p-3 text-center">
-          <p className="text-sm text-gray-600">레벨 업 시 <strong className="text-purple-600">무료 아이템</strong> 지급!</p>
         </div>
       </div>
     </div>

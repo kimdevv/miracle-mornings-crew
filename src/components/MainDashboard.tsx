@@ -11,6 +11,13 @@ const MainDashboard = ({ user, setUser }: MainDashboardProps) => {
   const isAlarmSet = true; // 임시로 설정됨
   const nextAlarmTime = "06:30";
 
+  // 임시 데이터 - 오늘 미라클 모닝 참여자 수와 실패자 정보
+  const todayParticipants = 1250;
+  const todayFailures = 312;
+  const totalFailureAmount = todayFailures * 1000; // 실패자 * 1000원
+  const todaySuccessUsers = todayParticipants - todayFailures;
+  const expectedReward = todaySuccessUsers > 0 ? Math.floor(totalFailureAmount / todaySuccessUsers) : 0;
+
   return (
     <div className="px-4 py-6 space-y-6">
       {/* 메인 캐릭터 카드 */}
@@ -59,7 +66,7 @@ const MainDashboard = ({ user, setUser }: MainDashboardProps) => {
           안녕, {user.name}! 🎉
         </h2>
         <p className="text-gray-600 text-sm">
-          레벨 {user.character.level} • {user.consecutiveDays}일 연속 성공 중
+          {user.consecutiveDays}일 연속 성공 중
         </p>
       </div>
 
@@ -80,14 +87,21 @@ const MainDashboard = ({ user, setUser }: MainDashboardProps) => {
               <div className="text-2xl">✅</div>
             </div>
             
-            <div className="grid grid-cols-2 gap-3">
-              <div className="text-center p-3 bg-blue-50 rounded-xl">
-                <p className="text-lg font-bold text-blue-600">성공 시</p>
-                <p className="text-sm text-blue-800">+500원~2,000원</p>
+            <div className="bg-blue-50 rounded-xl p-4">
+              <div className="text-center mb-3">
+                <p className="text-lg font-bold text-blue-800">예상 성공 보상</p>
+                <p className="text-2xl font-bold text-blue-600">+{expectedReward.toLocaleString()}원</p>
               </div>
-              <div className="text-center p-3 bg-red-50 rounded-xl">
-                <p className="text-lg font-bold text-red-600">실패 시</p>
-                <p className="text-sm text-red-800">-1,000원</p>
+              <div className="grid grid-cols-2 gap-2 text-xs text-blue-700">
+                <div className="text-center">
+                  <p>오늘 참여자: {todayParticipants.toLocaleString()}명</p>
+                </div>
+                <div className="text-center">  
+                  <p>실패자: {todayFailures.toLocaleString()}명</p>
+                </div>
+              </div>
+              <div className="text-center mt-2 text-xs text-blue-600">
+                💡 실패자의 차감 크레딧이 성공자들에게 균등 분배돼요!
               </div>
             </div>
           </div>
@@ -109,28 +123,37 @@ const MainDashboard = ({ user, setUser }: MainDashboardProps) => {
           이번 주 성공률
         </h3>
         
-        <div className="flex justify-between items-end mb-3">
+        <div className="flex justify-between items-center mb-4">
           {['월', '화', '수', '목', '금', '토', '일'].map((day, index) => {
             const success = index < 5; // 임시 데이터
             return (
               <div key={day} className="flex flex-col items-center">
-                <div className={`w-8 h-16 rounded-full mb-2 flex items-end justify-center ${
-                  success ? 'bg-gradient-to-t from-green-400 to-green-200' : 'bg-gray-200'
+                <div className={`w-8 h-8 rounded-full mb-1 flex items-center justify-center text-xs font-bold ${
+                  success ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-500'
                 }`}>
-                  <div className={`w-6 h-${success ? '12' : '4'} rounded-full ${
-                    success ? 'bg-green-500' : 'bg-gray-400'
-                  } mb-1 transition-all`}></div>
+                  {success ? '✓' : '✗'}
                 </div>
                 <span className="text-xs text-gray-600">{day}</span>
-                {success && <span className="text-xs">✅</span>}
               </div>
             );
           })}
         </div>
         
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-3 text-center">
-          <p className="text-sm text-gray-600">이번 주 성공률</p>
-          <p className="text-2xl font-bold text-green-600">71%</p>
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4">
+          <div className="flex items-center justify-between">
+            <div className="text-center">
+              <p className="text-sm text-gray-600">이번 주 성공</p>
+              <p className="text-xl font-bold text-green-600">5일</p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm text-gray-600">성공률</p>
+              <p className="text-xl font-bold text-blue-600">71%</p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm text-gray-600">획득 크레딧</p>
+              <p className="text-xl font-bold text-purple-600">+7,200원</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -145,7 +168,7 @@ const MainDashboard = ({ user, setUser }: MainDashboardProps) => {
         <button className="bg-gradient-to-br from-blue-500 to-purple-500 text-white p-4 rounded-2xl text-center hover:shadow-lg transition-all">
           <div className="text-2xl mb-2">✨</div>
           <p className="font-bold">캐릭터 꾸미기</p>
-          <p className="text-xs opacity-90">레벨 {user.character.level}</p>
+          <p className="text-xs opacity-90">내 캐릭터</p>
         </button>
       </div>
     </div>
