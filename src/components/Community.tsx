@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Users, Trophy, Heart, MessageCircle } from 'lucide-react';
+import { Users, Trophy, Heart, MessageCircle, Bell } from 'lucide-react';
 
 interface CommunityProps {
   user: any;
@@ -17,12 +16,18 @@ const Community = ({ user }: CommunityProps) => {
     { id: 4, name: user.name, level: user.character.level, streak: user.consecutiveDays, character: '🐱', badges: ['⭐'] },
   ];
 
-  // 임시 친구 데이터
+  // 임시 친구 데이터 (일주일 = 7일)
   const friendsData = [
-    { id: 1, name: '아침햇살', level: 8, online: true, lastSeen: '방금 전' },
-    { id: 2, name: '얼리버드', level: 6, online: false, lastSeen: '2시간 전' },
-    { id: 3, name: '선라이즈', level: 11, online: true, lastSeen: '5분 전' },
+    { id: 1, name: '아침햇살', level: 8, online: true, lastSeen: '방금 전', lastSeenDays: 0 },
+    { id: 2, name: '얼리버드', level: 6, online: false, lastSeen: '2시간 전', lastSeenDays: 0 },
+    { id: 3, name: '선라이즈', level: 11, online: true, lastSeen: '5분 전', lastSeenDays: 0 },
+    { id: 4, name: '슬립킹', level: 4, online: false, lastSeen: '8일 전', lastSeenDays: 8 },
+    { id: 5, name: '나태러', level: 2, online: false, lastSeen: '15일 전', lastSeenDays: 15 },
   ];
+
+  const handleWakeUpFriend = (friendName: string) => {
+    alert(`${friendName}님에게 깨우기 알림을 보냈습니다! 🔔\n"일어나세요! 미라클 모닝 시간이에요!" 메시지와 함께 푸시 알림이 전송되었습니다.`);
+  };
 
   const renderCharacterEmoji = (character: string, level: number) => (
     <div className="relative">
@@ -225,7 +230,14 @@ const Community = ({ user }: CommunityProps) => {
                     </div>
                     
                     <div>
-                      <p className="font-bold text-gray-800">{friend.name}</p>
+                      <div className="flex items-center space-x-2">
+                        <p className="font-bold text-gray-800">{friend.name}</p>
+                        {friend.lastSeenDays >= 7 && (
+                          <span className="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">
+                            😴 잠수중
+                          </span>
+                        )}
+                      </div>
                       <p className="text-sm text-gray-500">
                         {friend.online ? '🟢 접속중' : `🔘 ${friend.lastSeen}`}
                       </p>
@@ -233,6 +245,15 @@ const Community = ({ user }: CommunityProps) => {
                   </div>
                   
                   <div className="flex space-x-2">
+                    {friend.lastSeenDays >= 7 && (
+                      <button 
+                        onClick={() => handleWakeUpFriend(friend.name)}
+                        className="p-2 bg-orange-100 rounded-full hover:bg-orange-200 transition-all"
+                        title="친구 깨우기"
+                      >
+                        <Bell size={16} className="text-orange-500" />
+                      </button>
+                    )}
                     <button className="p-2 bg-pink-100 rounded-full hover:bg-pink-200 transition-all">
                       <Heart size={16} className="text-pink-500" />
                     </button>
@@ -266,6 +287,14 @@ const Community = ({ user }: CommunityProps) => {
                   <p className="text-xs text-gray-500">1시간 전</p>
                 </div>
                 <Heart size={16} className="text-pink-500" />
+              </div>
+              
+              <div className="flex items-center space-x-3 p-3 bg-orange-50 rounded-xl">
+                <Bell size={16} className="text-orange-500" />
+                <div className="flex-1">
+                  <p className="text-sm"><strong>슬립킹</strong>님에게 깨우기 알림을 보냈어요! 🔔</p>
+                  <p className="text-xs text-gray-500">1시간 전</p>
+                </div>
               </div>
             </div>
           </div>
