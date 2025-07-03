@@ -25,9 +25,6 @@ const Header = ({ user }: HeaderProps) => {
         </div>
         
         <div className="flex items-center space-x-3">
-          <div className="bg-gradient-to-r from-yellow-400 to-orange-400 px-3 py-1 rounded-full">
-            <span className="text-white text-sm font-bold">💰 {user.credits.toLocaleString()}원</span>
-          </div>
           <button className="p-2 text-gray-600 hover:text-purple-600 transition-colors">
             <Bell size={20} />
           </button>

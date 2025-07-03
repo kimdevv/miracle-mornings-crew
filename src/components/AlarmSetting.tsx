@@ -13,7 +13,7 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
   const [selectedMinute, setSelectedMinute] = useState('30');
   const [repeatInterval, setRepeatInterval] = useState(0); // 0은 반복 없음, 5는 5분 간격
   const [customSound, setCustomSound] = useState(false);
-  const [penaltyAmount] = useState(1000);
+  const penaltyAmount = 1000; // 오늘 실패시 차감될 금액
 
   // 시간 옵션 생성 (5-8시)
   const hourOptions = ['05', '06', '07', '08'];
@@ -233,14 +233,10 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
           기상 실패 시 벌칙
         </h3>
         
-        <div className="space-y-3">
-          <div className="flex items-center justify-between p-3 bg-white rounded-xl">
-            <span className="text-gray-700">첫 번째 실패</span>
-            <span className="font-bold text-red-600">-1,000원</span>
-          </div>
-          <div className="flex items-center justify-between p-3 bg-white rounded-xl">
-            <span className="text-gray-700">연속 실패 시</span>
-            <span className="font-bold text-red-600">전날의 2배 차감</span>
+        <div className="flex items-center justify-center p-4 bg-white rounded-xl">
+          <div className="text-center">
+            <span className="text-3xl font-bold text-red-600">-{penaltyAmount.toLocaleString()}원</span>
+            <p className="text-sm text-gray-700 mt-1">오늘 기상 실패시 차감 금액</p>
           </div>
         </div>
         

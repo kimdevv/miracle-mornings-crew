@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { CreditCard, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 
@@ -126,49 +127,6 @@ const CreditSystem = ({ user, setUser }: CreditSystemProps) => {
                 <p>• 최소 현금화 금액: 10,000원</p>
                 <p>• 수수료: 무료</p>
                 <p>• 처리 시간: 영업일 기준 3-5일</p>
-              </div>
-            </div>
-          </div>
-
-          {/* 크레딧 획득 방법 */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-pink-100">
-            <h3 className="font-bold text-gray-800 mb-4 flex items-center">
-              <TrendingUp className="text-blue-500 mr-2" size={20} />
-              크레딧 획득 방법
-            </h3>
-            
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl">
-                <div className="flex items-center">
-                  <span className="text-2xl mr-3">✅</span>
-                  <div>
-                    <p className="font-bold text-green-800">기상 성공</p>
-                    <p className="text-sm text-green-600">성공자/실패자 수에 따라 랜덤 분배</p>
-                  </div>
-                </div>
-                <span className="font-bold text-green-600">매일 다름</span>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-xl">
-                <div className="flex items-center">
-                  <span className="text-2xl mr-3">🏆</span>
-                  <div>
-                    <p className="font-bold text-blue-800">연속 성공 보너스</p>
-                    <p className="text-sm text-blue-600">7일 연속 시 추가 보상</p>
-                  </div>
-                </div>
-                <span className="font-bold text-blue-600">+1,000원</span>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 bg-purple-50 rounded-xl">
-                <div className="flex items-center">
-                  <span className="text-2xl mr-3">👥</span>
-                  <div>
-                    <p className="font-bold text-purple-800">친구 추천</p>
-                    <p className="text-sm text-purple-600">친구가 가입하면</p>
-                  </div>
-                </div>
-                <span className="font-bold text-purple-600">+2,000원</span>
               </div>
             </div>
           </div>

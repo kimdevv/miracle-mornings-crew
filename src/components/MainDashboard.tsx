@@ -115,62 +115,6 @@ const MainDashboard = ({ user, setUser }: MainDashboardProps) => {
           </div>
         )}
       </div>
-
-      {/* 주간 성공률 */}
-      <div className="bg-white rounded-2xl p-5 shadow-sm border border-pink-100">
-        <h3 className="font-bold text-gray-800 mb-4 flex items-center">
-          <span className="text-yellow-500 mr-2">📊</span>
-          이번 주 성공률
-        </h3>
-        
-        <div className="flex justify-between items-center mb-4">
-          {['월', '화', '수', '목', '금', '토', '일'].map((day, index) => {
-            const success = index < 5; // 임시 데이터
-            return (
-              <div key={day} className="flex flex-col items-center">
-                <div className={`w-8 h-8 rounded-full mb-1 flex items-center justify-center text-xs font-bold ${
-                  success ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-500'
-                }`}>
-                  {success ? '✓' : '✗'}
-                </div>
-                <span className="text-xs text-gray-600">{day}</span>
-              </div>
-            );
-          })}
-        </div>
-        
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4">
-          <div className="flex items-center justify-between">
-            <div className="text-center">
-              <p className="text-sm text-gray-600">이번 주 성공</p>
-              <p className="text-xl font-bold text-green-600">5일</p>
-            </div>
-            <div className="text-center">
-              <p className="text-sm text-gray-600">성공률</p>
-              <p className="text-xl font-bold text-blue-600">71%</p>
-            </div>
-            <div className="text-center">
-              <p className="text-sm text-gray-600">획득 크레딧</p>
-              <p className="text-xl font-bold text-purple-600">+7,200원</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 빠른 액션 버튼들 */}
-      <div className="grid grid-cols-2 gap-4">
-        <button className="bg-gradient-to-br from-purple-500 to-pink-500 text-white p-4 rounded-2xl text-center hover:shadow-lg transition-all">
-          <div className="text-2xl mb-2">💰</div>
-          <p className="font-bold">크레딧 확인</p>
-          <p className="text-xs opacity-90">{user.credits.toLocaleString()}원</p>
-        </button>
-        
-        <button className="bg-gradient-to-br from-blue-500 to-purple-500 text-white p-4 rounded-2xl text-center hover:shadow-lg transition-all">
-          <div className="text-2xl mb-2">✨</div>
-          <p className="font-bold">캐릭터 꾸미기</p>
-          <p className="text-xs opacity-90">내 캐릭터</p>
-        </button>
-      </div>
     </div>
   );
 };

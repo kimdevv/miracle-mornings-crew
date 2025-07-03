@@ -18,8 +18,7 @@ const Index = () => {
     consecutiveDays: 5,
     character: {
       type: 'cat',
-      accessories: ['hat', 'glasses'],
-      level: 3
+      accessories: ['hat', 'glasses']
     },
     userType: 'student' // 'worker', 'student', 'exam-taker'
   });
