@@ -9,13 +9,68 @@ const Community = ({ user }: CommunityProps) => {
   const [activeTab, setActiveTab] = useState('ranking');
   const [selectedPlayer, setSelectedPlayer] = useState(null);
 
+  // 캐릭터 렌더링 함수
+  const renderCharacter = (character: any, size: number = 40) => (
+    <svg width={size} height={size} viewBox="0 0 100 100">
+      <g>
+        {/* 고양이 얼굴 */}
+        <ellipse cx="50" cy="55" rx="25" ry="20" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2"/>
+        
+        {/* 귀 */}
+        <path d="M30 40 L35 25 L45 35 Z" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2"/>
+        <path d="M70 40 L65 25 L55 35 Z" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2"/>
+        <path d="M32 35 L37 28 L42 33 Z" fill="#FF1493"/>
+        <path d="M68 35 L63 28 L58 33 Z" fill="#FF1493"/>
+        
+        {/* 눈 */}
+        <ellipse cx="42" cy="50" rx="3" ry="4" fill="#000"/>
+        <ellipse cx="58" cy="50" rx="3" ry="4" fill="#000"/>
+        <ellipse cx="43" cy="49" rx="1" ry="1" fill="#FFF"/>
+        <ellipse cx="59" cy="49" rx="1" ry="1" fill="#FFF"/>
+        
+        {/* 코 */}
+        <path d="M48 58 L52 58 L50 62 Z" fill="#FF1493"/>
+        
+        {/* 입 */}
+        <path d="M50 62 Q45 66 40 64" stroke="#FF1493" strokeWidth="2" fill="none"/>
+        <path d="M50 62 Q55 66 60 64" stroke="#FF1493" strokeWidth="2" fill="none"/>
+        
+        {/* 수염 */}
+        <line x1="25" y1="55" x2="35" y2="56" stroke="#FF1493" strokeWidth="1"/>
+        <line x1="25" y1="60" x2="35" y2="59" stroke="#FF1493" strokeWidth="1"/>
+        <line x1="75" y1="55" x2="65" y2="56" stroke="#FF1493" strokeWidth="1"/>
+        <line x1="75" y1="60" x2="65" y2="59" stroke="#FF1493" strokeWidth="1"/>
+        
+        {/* 장착된 아이템들 */}
+        {character && character.accessories && character.accessories.includes('hat') && (
+          <>
+            <ellipse cx="50" cy="30" rx="20" ry="8" fill="#4169E1"/>
+            <ellipse cx="50" cy="25" rx="18" ry="6" fill="#6495ED"/>
+            <circle cx="50" cy="20" r="4" fill="#FFD700"/>
+          </>
+        )}
+        
+        {character && character.accessories && character.accessories.includes('glasses') && (
+          <>
+            <circle cx="42" cy="50" r="8" fill="none" stroke="#000" strokeWidth="2"/>
+            <circle cx="58" cy="50" r="8" fill="none" stroke="#000" strokeWidth="2"/>
+            <line x1="50" y1="48" x2="50" y2="52" stroke="#000" strokeWidth="2"/>
+          </>
+        )}
+      </g>
+    </svg>
+  );
+
   // 임시 랭킹 데이터 with character info
   const rankingData = [
     { 
       id: 1, 
       name: '기상왕김철수', 
       streak: 28, 
-      character: '🐱', 
+      character: {
+        type: 'cat',
+        accessories: ['hat', 'glasses']
+      },
       items: {
         hats: [{ name: '왕관', equipped: true }],
         accessories: [{ name: '선글라스', equipped: true }],
@@ -26,7 +81,10 @@ const Community = ({ user }: CommunityProps) => {
       id: 2, 
       name: '새벽러버', 
       streak: 21, 
-      character: '🐶', 
+      character: {
+        type: 'cat',
+        accessories: ['hat']
+      },
       items: {
         hats: [{ name: '야구모자', equipped: true }],
         accessories: [{ name: '목걸이', equipped: true }],
@@ -37,7 +95,10 @@ const Community = ({ user }: CommunityProps) => {
       id: 3, 
       name: '미라클걸', 
       streak: 19, 
-      character: '🐰', 
+      character: {
+        type: 'cat',
+        accessories: ['glasses']
+      },
       items: {
         hats: [{ name: '비니', equipped: true }],
         accessories: [{ name: '리본', equipped: true }],
@@ -48,7 +109,7 @@ const Community = ({ user }: CommunityProps) => {
       id: 4, 
       name: user.name, 
       streak: user.consecutiveDays, 
-      character: '🐱', 
+      character: user.character,
       items: {
         hats: [{ name: '야구모자', equipped: true }],
         accessories: [{ name: '안경', equipped: true }],
@@ -100,12 +161,6 @@ const Community = ({ user }: CommunityProps) => {
     }
   };
 
-  const renderCharacterEmoji = (character: string) => (
-    <div className="w-12 h-12 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center">
-      <span className="text-2xl">{character}</span>
-    </div>
-  );
-
   const renderPlayerModal = (player: any) => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-3xl p-6 max-w-sm w-full max-h-[80vh] overflow-y-auto">
@@ -122,7 +177,7 @@ const Community = ({ user }: CommunityProps) => {
         {/* 캐릭터 */}
         <div className="text-center mb-6">
           <div className="w-24 h-24 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center mx-auto mb-3">
-            <span className="text-4xl">{player.character}</span>
+            {renderCharacter(player.character, 60)}
           </div>
           <p className="text-lg font-bold text-gray-800">{player.name}</p>
           <p className="text-sm text-gray-600">{player.streak}일 연속 성공</p>
@@ -210,7 +265,9 @@ const Community = ({ user }: CommunityProps) => {
       {/* 내 프로필 카드 */}
       <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl p-5">
         <div className="flex items-center space-x-4">
-          {renderCharacterEmoji('🐱')}
+          <div className="w-12 h-12 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center">
+            {renderCharacter(user.character, 40)}
+          </div>
           
           <div className="flex-1">
             <h3 className="font-bold text-gray-800 text-lg">{user.name}</h3>
@@ -261,7 +318,7 @@ const Community = ({ user }: CommunityProps) => {
               {/* 2등 */}
               <div className="text-center" onClick={() => setSelectedPlayer(rankingData[1])}>
                 <div className="bg-gray-200 rounded-full p-3 mb-2 cursor-pointer hover:bg-gray-300 transition-all">
-                  <span className="text-2xl">🐶</span>
+                  {renderCharacter(rankingData[1].character, 40)}
                 </div>
                 <div className="bg-gray-400 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-1 text-sm font-bold">2</div>
                 <p className="text-xs text-gray-600">새벽러버</p>
@@ -271,7 +328,7 @@ const Community = ({ user }: CommunityProps) => {
               {/* 1등 */}
               <div className="text-center transform scale-110" onClick={() => setSelectedPlayer(rankingData[0])}>
                 <div className="bg-yellow-200 rounded-full p-4 mb-2 animate-pulse cursor-pointer hover:bg-yellow-300 transition-all">
-                  <span className="text-3xl">🐱</span>
+                  {renderCharacter(rankingData[0].character, 50)}
                 </div>
                 <div className="bg-yellow-400 text-white rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-1 font-bold">1</div>
                 <p className="text-xs text-gray-600">기상왕김철수</p>
@@ -281,7 +338,7 @@ const Community = ({ user }: CommunityProps) => {
               {/* 3등 */}
               <div className="text-center" onClick={() => setSelectedPlayer(rankingData[2])}>
                 <div className="bg-orange-200 rounded-full p-3 mb-2 cursor-pointer hover:bg-orange-300 transition-all">
-                  <span className="text-2xl">🐰</span>
+                  {renderCharacter(rankingData[2].character, 40)}
                 </div>
                 <div className="bg-orange-400 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-1 text-sm font-bold">3</div>
                 <p className="text-xs text-gray-600">미라클걸</p>
@@ -315,7 +372,9 @@ const Community = ({ user }: CommunityProps) => {
                       {index + 1}
                     </div>
                     
-                    {renderCharacterEmoji(player.character)}
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center">
+                      {renderCharacter(player.character, 40)}
+                    </div>
                     
                     <div>
                       <div className="flex items-center space-x-2">
@@ -475,7 +534,9 @@ const Community = ({ user }: CommunityProps) => {
                     <div key={member.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                       <div className="flex items-center space-x-3">
                         <div className="relative">
-                          {renderCharacterEmoji('🐱')}
+                          <div className="w-12 h-12 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center">
+                            {renderCharacter(user.character, 40)}
+                          </div>
                           <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full ${
                             member.online ? 'bg-green-400' : 'bg-gray-400'
                           }`}></div>
@@ -524,7 +585,9 @@ const Community = ({ user }: CommunityProps) => {
                 
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-xl">
-                    <span className="text-2xl">🐶</span>
+                    <div className="w-8 h-8 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center">
+                      {renderCharacter({ type: 'cat', accessories: ['hat'] }, 24)}
+                    </div>
                     <div className="flex-1">
                       <p className="text-sm"><strong>의대생김철수</strong>님이 21일 연속 기상을 달성했어요!</p>
                       <p className="text-xs text-gray-500">30분 전</p>
