@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Clock } from 'lucide-react';
-import { Slider } from '@/components/ui/slider';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface AlarmSettingProps {
   user: any;
@@ -9,30 +9,19 @@ interface AlarmSettingProps {
 }
 
 const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
-  const [selectedTime, setSelectedTime] = useState('06:30');
+  const [selectedHour, setSelectedHour] = useState('06');
+  const [selectedMinute, setSelectedMinute] = useState('30');
+  const [repeatInterval, setRepeatInterval] = useState(0); // 0은 반복 없음, 5는 5분 간격
   const [customSound, setCustomSound] = useState(false);
-  const [penaltyAmount, setPenaltyAmount] = useState(1000);
+  const [penaltyAmount] = useState(1000);
 
-  // 05:00부터 08:00까지 15분 단위로 시간 생성
-  const generateTimeSlots = () => {
-    const slots = [];
-    for (let hour = 5; hour <= 8; hour++) {
-      for (let minute = 0; minute < 60; minute += 15) {
-        const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-        slots.push(timeString);
-      }
-    }
-    return slots;
-  };
-
-  const timeSlots = generateTimeSlots();
-  const [timeIndex, setTimeIndex] = useState(timeSlots.indexOf(selectedTime));
-
-  const handleTimeChange = (value: number[]) => {
-    const newIndex = value[0];
-    setTimeIndex(newIndex);
-    setSelectedTime(timeSlots[newIndex]);
-  };
+  // 시간 옵션 생성 (5-8시)
+  const hourOptions = ['05', '06', '07', '08'];
+  
+  // 분 옵션 생성 (00-59분)
+  const minuteOptions = Array.from({ length: 60 }, (_, i) => 
+    i.toString().padStart(2, '0')
+  );
 
   const handleSetAlarm = () => {
     if (user.credits < 5000) {
@@ -40,8 +29,8 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
       return;
     }
     
-    // 알람 설정 로직
-    alert('알람이 설정되었습니다! 내일 아침 화이팅! 💪');
+    const repeatText = repeatInterval > 0 ? ` (${repeatInterval}분 간격 반복)` : '';
+    alert(`알람이 설정되었습니다! 내일 ${selectedHour}:${selectedMinute}${repeatText}에 만나요! 💪`);
   };
 
   return (
@@ -78,7 +67,7 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
         </div>
       </div>
 
-      {/* 시간 선택 스크롤 */}
+      {/* 시간 선택 */}
       <div className="bg-white rounded-2xl p-5 shadow-sm border border-pink-100">
         <h3 className="font-bold text-gray-800 mb-4 flex items-center">
           <span className="text-purple-500 mr-2">⏰</span>
@@ -88,35 +77,97 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
         <div className="space-y-6">
           <div className="text-center">
             <div className="text-4xl font-bold text-purple-600 mb-2">
-              {selectedTime}
+              {selectedHour}:{selectedMinute}
             </div>
             <p className="text-sm text-gray-600">선택된 알람 시간</p>
           </div>
           
-          <div className="px-4">
-            <Slider
-              value={[timeIndex]}
-              onValueChange={handleTimeChange}
-              max={timeSlots.length - 1}
-              min={0}
-              step={1}
-              className="w-full"
-            />
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
-              <span>05:00</span>
-              <span>06:30</span>
-              <span>08:00</span>
+          <div className="flex space-x-4 justify-center">
+            <div className="flex-1">
+              <label className="block text-sm font-bold text-gray-700 mb-2 text-center">시간</label>
+              <Select value={selectedHour} onValueChange={setSelectedHour}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="시간 선택" />
+                </SelectTrigger>
+                <SelectContent>
+                  {hourOptions.map((hour) => (
+                    <SelectItem key={hour} value={hour}>
+                      {hour}시
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex-1">
+              <label className="block text-sm font-bold text-gray-700 mb-2 text-center">분</label>
+              <Select value={selectedMinute} onValueChange={setSelectedMinute}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="분 선택" />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  {minuteOptions.map((minute) => (
+                    <SelectItem key={minute} value={minute}>
+                      {minute}분
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
         
         <div className="mt-4 p-3 bg-blue-50 rounded-xl">
           <p className="text-sm text-blue-800">
-            💡 <strong>선택된 시간:</strong> {selectedTime}
+            💡 <strong>선택된 시간:</strong> {selectedHour}:{selectedMinute}
           </p>
           <p className="text-xs text-blue-600 mt-1">
             알람 후 2분 뒤 푸시 알림으로 기상 인증이 시작돼요!
           </p>
+        </div>
+      </div>
+
+      {/* 알람 반복 설정 */}
+      <div className="bg-white rounded-2xl p-5 shadow-sm border border-pink-100">
+        <h3 className="font-bold text-gray-800 mb-4 flex items-center">
+          <span className="text-orange-500 mr-2">🔄</span>
+          알람 반복 설정
+        </h3>
+        
+        <div className="space-y-3">
+          <button 
+            onClick={() => setRepeatInterval(0)}
+            className={`w-full p-4 rounded-xl text-left transition-all ${
+              repeatInterval === 0
+                ? 'bg-gradient-to-r from-green-100 to-blue-100 border-2 border-green-300' 
+                : 'bg-gray-50 hover:bg-gray-100'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-bold text-gray-800">한 번만 울리기</p>
+                <p className="text-sm text-gray-600">설정한 시간에 한 번만 알람이 울려요</p>
+              </div>
+              {repeatInterval === 0 && <span className="text-green-500">✅</span>}
+            </div>
+          </button>
+          
+          <button 
+            onClick={() => setRepeatInterval(5)}
+            className={`w-full p-4 rounded-xl text-left transition-all ${
+              repeatInterval === 5
+                ? 'bg-gradient-to-r from-orange-100 to-pink-100 border-2 border-orange-300' 
+                : 'bg-gray-50 hover:bg-gray-100'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-bold text-gray-800">5분 간격 반복</p>
+                <p className="text-sm text-gray-600">기상 인증까지 5분마다 반복해서 울려요</p>
+              </div>
+              {repeatInterval === 5 && <span className="text-orange-500">✅</span>}
+            </div>
+          </button>
         </div>
       </div>
 
@@ -205,7 +256,8 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
         <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-4">
           <h4 className="font-bold text-gray-800 mb-2">📋 설정 요약</h4>
           <div className="space-y-1 text-sm">
-            <p><strong>알람 시간:</strong> 내일 {selectedTime}</p>
+            <p><strong>알람 시간:</strong> 내일 {selectedHour}:{selectedMinute}</p>
+            <p><strong>반복 설정:</strong> {repeatInterval === 0 ? '한 번만' : '5분 간격 반복'}</p>
             <p><strong>알람 소리:</strong> {customSound ? '나만의 음원' : '기본 알람'}</p>
             <p><strong>실패 시 차감:</strong> {penaltyAmount.toLocaleString()}원</p>
           </div>

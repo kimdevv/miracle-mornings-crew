@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Trophy, Heart, MessageCircle, Bell } from 'lucide-react';
+import { Users, Trophy, Heart, MessageCircle, Bell, Plus, Crown, UserPlus } from 'lucide-react';
 
 interface CommunityProps {
   user: any;
@@ -16,17 +16,48 @@ const Community = ({ user }: CommunityProps) => {
     { id: 4, name: user.name, level: user.character.level, streak: user.consecutiveDays, character: '🐱', badges: ['⭐'] },
   ];
 
-  // 임시 친구 데이터 (일주일 = 7일)
-  const friendsData = [
-    { id: 1, name: '아침햇살', level: 8, online: true, lastSeen: '방금 전', lastSeenDays: 0 },
-    { id: 2, name: '얼리버드', level: 6, online: false, lastSeen: '2시간 전', lastSeenDays: 0 },
-    { id: 3, name: '선라이즈', level: 11, online: true, lastSeen: '5분 전', lastSeenDays: 0 },
-    { id: 4, name: '슬립킹', level: 4, online: false, lastSeen: '8일 전', lastSeenDays: 8 },
-    { id: 5, name: '나태러', level: 2, online: false, lastSeen: '15일 전', lastSeenDays: 15 },
+  // 임시 그룹 데이터
+  const groupsData = [
+    { 
+      id: 1, 
+      name: '서울대 의예과', 
+      type: '학교',
+      memberCount: 24, 
+      isOwner: false,
+      members: [
+        { id: 1, name: '의대생김철수', level: 8, online: true, lastSeen: '방금 전', lastSeenDays: 0 },
+        { id: 2, name: '예비의사', level: 6, online: false, lastSeen: '2시간 전', lastSeenDays: 0 },
+        { id: 3, name: '수험생A', level: 4, online: false, lastSeen: '8일 전', lastSeenDays: 8 },
+      ]
+    },
+    { 
+      id: 2, 
+      name: '공무원 9급 스터디', 
+      type: '고시',
+      memberCount: 12, 
+      isOwner: true,
+      members: [
+        { id: 4, name: '공시러', level: 11, online: true, lastSeen: '5분 전', lastSeenDays: 0 },
+        { id: 5, name: '합격예정자', level: 2, online: false, lastSeen: '15일 전', lastSeenDays: 15 },
+      ]
+    },
   ];
 
-  const handleWakeUpFriend = (friendName: string) => {
-    alert(`${friendName}님에게 깨우기 알림을 보냈습니다! 🔔\n"일어나세요! 미라클 모닝 시간이에요!" 메시지와 함께 푸시 알림이 전송되었습니다.`);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [newGroupName, setNewGroupName] = useState('');
+  const [newGroupType, setNewGroupType] = useState('학교');
+
+  const handleWakeUpMember = (memberName: string) => {
+    alert(`${memberName}님에게 깨우기 알림을 보냈습니다! 🔔\n"일어나세요! 미라클 모닝 시간이에요!" 메시지와 함께 푸시 알림이 전송되었습니다.`);
+  };
+
+  const handleCreateGroup = () => {
+    if (newGroupName.trim()) {
+      alert(`"${newGroupName}" 그룹이 생성되었습니다! 🎉\n친구들을 초대해보세요!`);
+      setShowCreateGroup(false);
+      setNewGroupName('');
+    }
   };
 
   const renderCharacterEmoji = (character: string, level: number) => (
@@ -86,14 +117,14 @@ const Community = ({ user }: CommunityProps) => {
           🏆 랭킹
         </button>
         <button
-          onClick={() => setActiveTab('friends')}
+          onClick={() => setActiveTab('groups')}
           className={`flex-1 py-3 px-4 rounded-xl font-bold transition-all ${
-            activeTab === 'friends'
+            activeTab === 'groups'
               ? 'bg-white text-purple-600 shadow-sm'
               : 'text-gray-600'
           }`}
         >
-          👥 친구
+          👥 그룹
         </button>
       </div>
 
@@ -190,114 +221,209 @@ const Community = ({ user }: CommunityProps) => {
         </div>
       )}
 
-      {activeTab === 'friends' && (
+      {activeTab === 'groups' && (
         <div className="space-y-4">
-          {/* 친구 추가 */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-pink-100">
-            <h3 className="font-bold text-gray-800 mb-4">친구 추가</h3>
-            
-            <div className="flex space-x-3">
-              <input
-                type="text"
-                placeholder="친구 닉네임 입력"
-                className="flex-1 px-4 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-xl font-bold hover:shadow-lg transition-all">
-                추가
-              </button>
-            </div>
-            
-            <div className="mt-4 p-3 bg-blue-50 rounded-xl text-center">
-              <p className="text-sm text-blue-800">
-                친구 추천 시 서로 <strong>2,000원 크레딧</strong>을 받아요! 🎁
-              </p>
-            </div>
-          </div>
-
-          {/* 친구 목록 */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-pink-100">
-            <h3 className="font-bold text-gray-800 mb-4">내 친구들 ({friendsData.length})</h3>
-            
-            <div className="space-y-3">
-              {friendsData.map((friend) => (
-                <div key={friend.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <div className="flex items-center space-x-3">
-                    <div className="relative">
-                      {renderCharacterEmoji('🐱', friend.level)}
-                      <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full ${
-                        friend.online ? 'bg-green-400' : 'bg-gray-400'
-                      }`}></div>
+          {!selectedGroup ? (
+            <>
+              {/* 그룹 생성 */}
+              <div className="bg-white rounded-2xl p-5 shadow-sm border border-pink-100">
+                <h3 className="font-bold text-gray-800 mb-4">새 그룹 만들기</h3>
+                
+                {!showCreateGroup ? (
+                  <button 
+                    onClick={() => setShowCreateGroup(true)}
+                    className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-bold hover:shadow-lg transition-all flex items-center justify-center space-x-2"
+                  >
+                    <Plus size={20} />
+                    <span>새 그룹 만들기</span>
+                  </button>
+                ) : (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2">그룹 이름</label>
+                      <input
+                        type="text"
+                        value={newGroupName}
+                        onChange={(e) => setNewGroupName(e.target.value)}
+                        placeholder="그룹 이름을 입력하세요"
+                        className="w-full px-4 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
                     </div>
                     
                     <div>
-                      <div className="flex items-center space-x-2">
-                        <p className="font-bold text-gray-800">{friend.name}</p>
-                        {friend.lastSeenDays >= 7 && (
-                          <span className="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">
-                            😴 잠수중
-                          </span>
-                        )}
+                      <label className="block text-sm font-bold text-gray-700 mb-2">그룹 유형</label>
+                      <select
+                        value={newGroupType}
+                        onChange={(e) => setNewGroupType(e.target.value)}
+                        className="w-full px-4 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      >
+                        <option value="학교">🏫 학교</option>
+                        <option value="반">📚 반</option>
+                        <option value="고시">📖 고시</option>
+                        <option value="직장">🏢 직장</option>
+                        <option value="기타">🎯 기타</option>
+                      </select>
+                    </div>
+                    
+                    <div className="flex space-x-3">
+                      <button
+                        onClick={() => setShowCreateGroup(false)}
+                        className="flex-1 py-3 bg-gray-200 text-gray-600 rounded-xl font-bold hover:bg-gray-300 transition-all"
+                      >
+                        취소
+                      </button>
+                      <button
+                        onClick={handleCreateGroup}
+                        className="flex-1 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-bold hover:shadow-lg transition-all"
+                      >
+                        생성하기
+                      </button>
+                    </div>
+                  </div>
+                )}
+                
+                <div className="mt-4 p-3 bg-blue-50 rounded-xl text-center">
+                  <p className="text-sm text-blue-800">
+                    그룹 생성 시 <strong>1,000원 크레딧</strong>을 받아요! 🎁
+                  </p>
+                </div>
+              </div>
+
+              {/* 내 그룹 목록 */}
+              <div className="bg-white rounded-2xl p-5 shadow-sm border border-pink-100">
+                <h3 className="font-bold text-gray-800 mb-4">내 그룹 ({groupsData.length})</h3>
+                
+                <div className="space-y-3">
+                  {groupsData.map((group) => (
+                    <div key={group.id} className="p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all cursor-pointer"
+                         onClick={() => setSelectedGroup(group)}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-12 h-12 bg-gradient-to-br from-green-200 to-blue-200 rounded-full flex items-center justify-center">
+                            <span className="text-2xl">
+                              {group.type === '학교' ? '🏫' : 
+                               group.type === '반' ? '📚' : 
+                               group.type === '고시' ? '📖' : 
+                               group.type === '직장' ? '🏢' : '🎯'}
+                            </span>
+                          </div>
+                          
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <p className="font-bold text-gray-800">{group.name}</p>
+                              {group.isOwner && <Crown size={16} className="text-yellow-500" />}
+                            </div>
+                            <p className="text-sm text-gray-500">{group.type} • {group.memberCount}명</p>
+                          </div>
+                        </div>
+                        
+                        <div className="text-right">
+                          <p className="text-xs text-gray-500">클릭하여 입장</p>
+                        </div>
                       </div>
-                      <p className="text-sm text-gray-500">
-                        {friend.online ? '🟢 접속중' : `🔘 ${friend.lastSeen}`}
-                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* 그룹 상세 화면 */}
+              <div className="bg-white rounded-2xl p-5 shadow-sm border border-pink-100">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <button 
+                      onClick={() => setSelectedGroup(null)}
+                      className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"
+                    >
+                      ←
+                    </button>
+                    <div>
+                      <h3 className="font-bold text-gray-800">{selectedGroup.name}</h3>
+                      <p className="text-sm text-gray-500">{selectedGroup.type} • {selectedGroup.memberCount}명</p>
                     </div>
                   </div>
                   
-                  <div className="flex space-x-2">
-                    {friend.lastSeenDays >= 7 && (
-                      <button 
-                        onClick={() => handleWakeUpFriend(friend.name)}
-                        className="p-2 bg-orange-100 rounded-full hover:bg-orange-200 transition-all"
-                        title="친구 깨우기"
-                      >
-                        <Bell size={16} className="text-orange-500" />
-                      </button>
-                    )}
-                    <button className="p-2 bg-pink-100 rounded-full hover:bg-pink-200 transition-all">
-                      <Heart size={16} className="text-pink-500" />
-                    </button>
+                  {selectedGroup.isOwner && (
                     <button className="p-2 bg-blue-100 rounded-full hover:bg-blue-200 transition-all">
-                      <MessageCircle size={16} className="text-blue-500" />
+                      <UserPlus size={16} className="text-blue-500" />
                     </button>
+                  )}
+                </div>
+                
+                <div className="space-y-3">
+                  {selectedGroup.members.map((member) => (
+                    <div key={member.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                      <div className="flex items-center space-x-3">
+                        <div className="relative">
+                          {renderCharacterEmoji('🐱', member.level)}
+                          <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full ${
+                            member.online ? 'bg-green-400' : 'bg-gray-400'
+                          }`}></div>
+                        </div>
+                        
+                        <div>
+                          <div className="flex items-center space-x-2">
+                            <p className="font-bold text-gray-800">{member.name}</p>
+                            {member.lastSeenDays >= 7 && (
+                              <span className="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">
+                                😴 잠수중
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-500">
+                            {member.online ? '🟢 접속중' : `🔘 ${member.lastSeen}`}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex space-x-2">
+                        {member.lastSeenDays >= 7 && (
+                          <button 
+                            onClick={() => handleWakeUpMember(member.name)}
+                            className="p-2 bg-orange-100 rounded-full hover:bg-orange-200 transition-all"
+                            title="멤버 깨우기"
+                          >
+                            <Bell size={16} className="text-orange-500" />
+                          </button>
+                        )}
+                        <button className="p-2 bg-pink-100 rounded-full hover:bg-pink-200 transition-all">
+                          <Heart size={16} className="text-pink-500" />
+                        </button>
+                        <button className="p-2 bg-blue-100 rounded-full hover:bg-blue-200 transition-all">
+                          <MessageCircle size={16} className="text-blue-500" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 그룹 활동 */}
+              <div className="bg-white rounded-2xl p-5 shadow-sm border border-pink-100">
+                <h3 className="font-bold text-gray-800 mb-4">그룹 활동</h3>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-xl">
+                    <span className="text-2xl">🐶</span>
+                    <div className="flex-1">
+                      <p className="text-sm"><strong>의대생김철수</strong>님이 21일 연속 기상을 달성했어요!</p>
+                      <p className="text-xs text-gray-500">30분 전</p>
+                    </div>
+                    <Heart size={16} className="text-pink-500" />
+                  </div>
+                  
+                  <div className="flex items-center space-x-3 p-3 bg-orange-50 rounded-xl">
+                    <Bell size={16} className="text-orange-500" />
+                    <div className="flex-1">
+                      <p className="text-sm"><strong>수험생A</strong>님에게 깨우기 알림을 보냈어요! 🔔</p>
+                      <p className="text-xs text-gray-500">1시간 전</p>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 친구 활동 */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-pink-100">
-            <h3 className="font-bold text-gray-800 mb-4">친구 활동</h3>
-            
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-xl">
-                <span className="text-2xl">🐶</span>
-                <div className="flex-1">
-                  <p className="text-sm"><strong>새벽러버</strong>님이 21일 연속 기상을 달성했어요!</p>
-                  <p className="text-xs text-gray-500">30분 전</p>
-                </div>
-                <Heart size={16} className="text-pink-500" />
               </div>
-              
-              <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-xl">
-                <span className="text-2xl">🐰</span>
-                <div className="flex-1">
-                  <p className="text-sm"><strong>미라클걸</strong>님이 새로운 뱃지를 획득했어요! 💎</p>
-                  <p className="text-xs text-gray-500">1시간 전</p>
-                </div>
-                <Heart size={16} className="text-pink-500" />
-              </div>
-              
-              <div className="flex items-center space-x-3 p-3 bg-orange-50 rounded-xl">
-                <Bell size={16} className="text-orange-500" />
-                <div className="flex-1">
-                  <p className="text-sm"><strong>슬립킹</strong>님에게 깨우기 알림을 보냈어요! 🔔</p>
-                  <p className="text-xs text-gray-500">1시간 전</p>
-                </div>
-              </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       )}
     </div>
