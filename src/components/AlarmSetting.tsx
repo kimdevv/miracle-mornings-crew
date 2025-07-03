@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Clock } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -15,8 +14,8 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
   const [customSound, setCustomSound] = useState(false);
   const penaltyAmount = 1000; // 오늘 실패시 차감될 금액
 
-  // 시간 옵션 생성 (5-8시)
-  const hourOptions = ['05', '06', '07', '08'];
+  // 시간 옵션 생성 (5-7시)
+  const hourOptions = ['05', '06', '07'];
   
   // 분 옵션 생성 (5분 간격: 00, 05, 10, ..., 55)
   const minuteOptions = Array.from({ length: 12 }, (_, i) => 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Trophy, Heart, MessageCircle, Bell, Plus, Crown, UserPlus } from 'lucide-react';
+import { Users, Trophy, Heart, MessageCircle, Bell, Plus, Crown, UserPlus, X } from 'lucide-react';
 
 interface CommunityProps {
   user: any;
@@ -7,16 +7,56 @@ interface CommunityProps {
 
 const Community = ({ user }: CommunityProps) => {
   const [activeTab, setActiveTab] = useState('ranking');
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
 
-  // 임시 랭킹 데이터
+  // 임시 랭킹 데이터 with character info
   const rankingData = [
-    { id: 1, name: '기상왕김철수', streak: 28, character: '🐱', badges: ['👑', '🔥'] },
-    { id: 2, name: '새벽러버', streak: 21, character: '🐶', badges: ['🌟'] },
-    { id: 3, name: '미라클걸', streak: 19, character: '🐰', badges: ['💎'] },
-    { id: 4, name: user.name, streak: user.consecutiveDays, character: '🐱', badges: ['⭐'] },
+    { 
+      id: 1, 
+      name: '기상왕김철수', 
+      streak: 28, 
+      character: '🐱', 
+      items: {
+        hats: [{ name: '왕관', equipped: true }],
+        accessories: [{ name: '선글라스', equipped: true }],
+        backgrounds: [{ name: '성', equipped: true }]
+      }
+    },
+    { 
+      id: 2, 
+      name: '새벽러버', 
+      streak: 21, 
+      character: '🐶', 
+      items: {
+        hats: [{ name: '야구모자', equipped: true }],
+        accessories: [{ name: '목걸이', equipped: true }],
+        backgrounds: [{ name: '해변', equipped: true }]
+      }
+    },
+    { 
+      id: 3, 
+      name: '미라클걸', 
+      streak: 19, 
+      character: '🐰', 
+      items: {
+        hats: [{ name: '비니', equipped: true }],
+        accessories: [{ name: '리본', equipped: true }],
+        backgrounds: [{ name: '정원', equipped: true }]
+      }
+    },
+    { 
+      id: 4, 
+      name: user.name, 
+      streak: user.consecutiveDays, 
+      character: '🐱', 
+      items: {
+        hats: [{ name: '야구모자', equipped: true }],
+        accessories: [{ name: '안경', equipped: true }],
+        backgrounds: [{ name: '기본', equipped: true }]
+      }
+    },
   ];
 
-  // 임시 그룹 데이터
   const groupsData = [
     { 
       id: 1, 
@@ -66,6 +106,96 @@ const Community = ({ user }: CommunityProps) => {
     </div>
   );
 
+  const renderPlayerModal = (player: any) => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-3xl p-6 max-w-sm w-full max-h-[80vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-bold text-gray-800">{player.name}</h3>
+          <button 
+            onClick={() => setSelectedPlayer(null)}
+            className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"
+          >
+            <X size={20} className="text-gray-600" />
+          </button>
+        </div>
+
+        {/* 캐릭터 */}
+        <div className="text-center mb-6">
+          <div className="w-24 h-24 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center mx-auto mb-3">
+            <span className="text-4xl">{player.character}</span>
+          </div>
+          <p className="text-lg font-bold text-gray-800">{player.name}</p>
+          <p className="text-sm text-gray-600">{player.streak}일 연속 성공</p>
+        </div>
+
+        {/* 보유 아이템들 */}
+        <div className="space-y-4">
+          <div>
+            <h4 className="font-bold text-gray-800 mb-2 flex items-center">
+              <span className="mr-2">🎩</span>모자
+            </h4>
+            <div className="grid grid-cols-2 gap-2">
+              {player.items.hats.map((item: any, index: number) => (
+                <div key={index} className="bg-gray-50 rounded-xl p-3 text-center">
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center mx-auto mb-1">
+                    <span className="text-lg">🎩</span>
+                  </div>
+                  <p className="text-xs text-gray-700">{item.name}</p>
+                  {item.equipped && <span className="text-xs text-green-600">착용중</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-gray-800 mb-2 flex items-center">
+              <span className="mr-2">👓</span>액세서리
+            </h4>
+            <div className="grid grid-cols-2 gap-2">
+              {player.items.accessories.map((item: any, index: number) => (
+                <div key={index} className="bg-gray-50 rounded-xl p-3 text-center">
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center mx-auto mb-1">
+                    <span className="text-lg">👓</span>
+                  </div>
+                  <p className="text-xs text-gray-700">{item.name}</p>
+                  {item.equipped && <span className="text-xs text-green-600">착용중</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-gray-800 mb-2 flex items-center">
+              <span className="mr-2">🏞️</span>배경
+            </h4>
+            <div className="grid grid-cols-2 gap-2">
+              {player.items.backgrounds.map((item: any, index: number) => (
+                <div key={index} className="bg-gray-50 rounded-xl p-3 text-center">
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center mx-auto mb-1">
+                    <span className="text-lg">🏞️</span>
+                  </div>
+                  <p className="text-xs text-gray-700">{item.name}</p>
+                  {item.equipped && <span className="text-xs text-green-600">착용중</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 flex space-x-2">
+          <button className="flex-1 py-3 bg-pink-100 text-pink-600 rounded-xl font-bold hover:bg-pink-200 transition-all flex items-center justify-center space-x-2">
+            <Heart size={16} />
+            <span>응원하기</span>
+          </button>
+          <button className="flex-1 py-3 bg-blue-100 text-blue-600 rounded-xl font-bold hover:bg-blue-200 transition-all flex items-center justify-center space-x-2">
+            <MessageCircle size={16} />
+            <span>메시지</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="px-4 py-6 space-y-6">
       {/* 헤더 */}
@@ -85,11 +215,6 @@ const Community = ({ user }: CommunityProps) => {
           <div className="flex-1">
             <h3 className="font-bold text-gray-800 text-lg">{user.name}</h3>
             <p className="text-gray-600 text-sm">{user.consecutiveDays}일 연속</p>
-            
-            <div className="flex space-x-2 mt-2">
-              <span className="bg-yellow-400 text-white text-xs px-2 py-1 rounded-full">⭐ 신입</span>
-              <span className="bg-green-400 text-white text-xs px-2 py-1 rounded-full">🔥 열정</span>
-            </div>
           </div>
           
           <div className="text-center">
@@ -134,8 +259,8 @@ const Community = ({ user }: CommunityProps) => {
             
             <div className="flex justify-center items-end space-x-4 mb-6">
               {/* 2등 */}
-              <div className="text-center">
-                <div className="bg-gray-200 rounded-full p-3 mb-2">
+              <div className="text-center" onClick={() => setSelectedPlayer(rankingData[1])}>
+                <div className="bg-gray-200 rounded-full p-3 mb-2 cursor-pointer hover:bg-gray-300 transition-all">
                   <span className="text-2xl">🐶</span>
                 </div>
                 <div className="bg-gray-400 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-1 text-sm font-bold">2</div>
@@ -144,8 +269,8 @@ const Community = ({ user }: CommunityProps) => {
               </div>
               
               {/* 1등 */}
-              <div className="text-center transform scale-110">
-                <div className="bg-yellow-200 rounded-full p-4 mb-2 animate-pulse">
+              <div className="text-center transform scale-110" onClick={() => setSelectedPlayer(rankingData[0])}>
+                <div className="bg-yellow-200 rounded-full p-4 mb-2 animate-pulse cursor-pointer hover:bg-yellow-300 transition-all">
                   <span className="text-3xl">🐱</span>
                 </div>
                 <div className="bg-yellow-400 text-white rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-1 font-bold">1</div>
@@ -154,8 +279,8 @@ const Community = ({ user }: CommunityProps) => {
               </div>
               
               {/* 3등 */}
-              <div className="text-center">
-                <div className="bg-orange-200 rounded-full p-3 mb-2">
+              <div className="text-center" onClick={() => setSelectedPlayer(rankingData[2])}>
+                <div className="bg-orange-200 rounded-full p-3 mb-2 cursor-pointer hover:bg-orange-300 transition-all">
                   <span className="text-2xl">🐰</span>
                 </div>
                 <div className="bg-orange-400 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-1 text-sm font-bold">3</div>
@@ -171,11 +296,15 @@ const Community = ({ user }: CommunityProps) => {
             
             <div className="space-y-3">
               {rankingData.map((player, index) => (
-                <div key={player.id} className={`flex items-center justify-between p-3 rounded-xl ${
-                  player.name === user.name 
-                    ? 'bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200' 
-                    : 'bg-gray-50'
-                }`}>
+                <div 
+                  key={player.id} 
+                  className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all hover:bg-gray-100 ${
+                    player.name === user.name 
+                      ? 'bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200' 
+                      : 'bg-gray-50'
+                  }`}
+                  onClick={() => player.name !== user.name && setSelectedPlayer(player)}
+                >
                   <div className="flex items-center space-x-3">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
                       index === 0 ? 'bg-yellow-400 text-white' :
@@ -192,11 +321,6 @@ const Community = ({ user }: CommunityProps) => {
                       <div className="flex items-center space-x-2">
                         <p className="font-bold text-gray-800">{player.name}</p>
                         {player.name === user.name && <span className="text-purple-500 text-sm">👋</span>}
-                      </div>
-                      <div className="flex items-center space-x-1 mt-1">
-                        {player.badges.map((badge, i) => (
-                          <span key={i} className="text-sm">{badge}</span>
-                        ))}
                       </div>
                     </div>
                   </div>
@@ -421,6 +545,9 @@ const Community = ({ user }: CommunityProps) => {
           )}
         </div>
       )}
+
+      {/* Player Modal */}
+      {selectedPlayer && renderPlayerModal(selectedPlayer)}
     </div>
   );
 };
