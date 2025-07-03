@@ -10,10 +10,10 @@ const Community = ({ user }: CommunityProps) => {
 
   // 임시 랭킹 데이터
   const rankingData = [
-    { id: 1, name: '기상왕김철수', level: 15, streak: 28, character: '🐱', badges: ['👑', '🔥'] },
-    { id: 2, name: '새벽러버', level: 12, streak: 21, character: '🐶', badges: ['🌟'] },
-    { id: 3, name: '미라클걸', level: 10, streak: 19, character: '🐰', badges: ['💎'] },
-    { id: 4, name: user.name, level: user.character.level, streak: user.consecutiveDays, character: '🐱', badges: ['⭐'] },
+    { id: 1, name: '기상왕김철수', streak: 28, character: '🐱', badges: ['👑', '🔥'] },
+    { id: 2, name: '새벽러버', streak: 21, character: '🐶', badges: ['🌟'] },
+    { id: 3, name: '미라클걸', streak: 19, character: '🐰', badges: ['💎'] },
+    { id: 4, name: user.name, streak: user.consecutiveDays, character: '🐱', badges: ['⭐'] },
   ];
 
   // 임시 그룹 데이터
@@ -25,9 +25,9 @@ const Community = ({ user }: CommunityProps) => {
       memberCount: 24, 
       isOwner: false,
       members: [
-        { id: 1, name: '의대생김철수', level: 8, online: true, lastSeen: '방금 전', lastSeenDays: 0 },
-        { id: 2, name: '예비의사', level: 6, online: false, lastSeen: '2시간 전', lastSeenDays: 0 },
-        { id: 3, name: '수험생A', level: 4, online: false, lastSeen: '8일 전', lastSeenDays: 8 },
+        { id: 1, name: '의대생김철수', online: true, lastSeen: '방금 전', lastSeenDays: 0 },
+        { id: 2, name: '예비의사', online: false, lastSeen: '2시간 전', lastSeenDays: 0 },
+        { id: 3, name: '수험생A', online: false, lastSeen: '8일 전', lastSeenDays: 8 },
       ]
     },
     { 
@@ -37,8 +37,8 @@ const Community = ({ user }: CommunityProps) => {
       memberCount: 12, 
       isOwner: true,
       members: [
-        { id: 4, name: '공시러', level: 11, online: true, lastSeen: '5분 전', lastSeenDays: 0 },
-        { id: 5, name: '합격예정자', level: 2, online: false, lastSeen: '15일 전', lastSeenDays: 15 },
+        { id: 4, name: '공시러', online: true, lastSeen: '5분 전', lastSeenDays: 0 },
+        { id: 5, name: '합격예정자', online: false, lastSeen: '15일 전', lastSeenDays: 15 },
       ]
     },
   ];
@@ -60,14 +60,9 @@ const Community = ({ user }: CommunityProps) => {
     }
   };
 
-  const renderCharacterEmoji = (character: string, level: number) => (
-    <div className="relative">
-      <div className="w-12 h-12 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center">
-        <span className="text-2xl">{character}</span>
-      </div>
-      <div className="absolute -bottom-1 -right-1 bg-yellow-400 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-        {level}
-      </div>
+  const renderCharacterEmoji = (character: string) => (
+    <div className="w-12 h-12 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center">
+      <span className="text-2xl">{character}</span>
     </div>
   );
 
@@ -85,11 +80,11 @@ const Community = ({ user }: CommunityProps) => {
       {/* 내 프로필 카드 */}
       <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl p-5">
         <div className="flex items-center space-x-4">
-          {renderCharacterEmoji('🐱', user.character.level)}
+          {renderCharacterEmoji('🐱')}
           
           <div className="flex-1">
             <h3 className="font-bold text-gray-800 text-lg">{user.name}</h3>
-            <p className="text-gray-600 text-sm">레벨 {user.character.level} • {user.consecutiveDays}일 연속</p>
+            <p className="text-gray-600 text-sm">{user.consecutiveDays}일 연속</p>
             
             <div className="flex space-x-2 mt-2">
               <span className="bg-yellow-400 text-white text-xs px-2 py-1 rounded-full">⭐ 신입</span>
@@ -191,7 +186,7 @@ const Community = ({ user }: CommunityProps) => {
                       {index + 1}
                     </div>
                     
-                    {renderCharacterEmoji(player.character, player.level)}
+                    {renderCharacterEmoji(player.character)}
                     
                     <div>
                       <div className="flex items-center space-x-2">
@@ -356,7 +351,7 @@ const Community = ({ user }: CommunityProps) => {
                     <div key={member.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                       <div className="flex items-center space-x-3">
                         <div className="relative">
-                          {renderCharacterEmoji('🐱', member.level)}
+                          {renderCharacterEmoji('🐱')}
                           <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full ${
                             member.online ? 'bg-green-400' : 'bg-gray-400'
                           }`}></div>

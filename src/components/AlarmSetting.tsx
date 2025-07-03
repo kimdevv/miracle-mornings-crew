@@ -18,14 +18,14 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
   // 시간 옵션 생성 (5-8시)
   const hourOptions = ['05', '06', '07', '08'];
   
-  // 분 옵션 생성 (00-59분)
-  const minuteOptions = Array.from({ length: 60 }, (_, i) => 
-    i.toString().padStart(2, '0')
+  // 분 옵션 생성 (5분 간격: 00, 05, 10, ..., 55)
+  const minuteOptions = Array.from({ length: 12 }, (_, i) => 
+    (i * 5).toString().padStart(2, '0')
   );
 
   const handleSetAlarm = () => {
-    if (user.credits < 5000) {
-      alert('크레딧이 부족합니다! 최소 5,000원이 필요해요.');
+    if (user.credits < penaltyAmount) {
+      alert('크레딧이 부족합니다! 실패 시 차감될 금액보다 크레딧이 많아야 알람을 설정할 수 있어요.');
       return;
     }
     
@@ -46,7 +46,7 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
 
       {/* 크레딧 체크 */}
       <div className={`p-4 rounded-2xl border-2 ${
-        user.credits >= 5000 
+        user.credits >= penaltyAmount 
           ? 'bg-green-50 border-green-200' 
           : 'bg-red-50 border-red-200'
       }`}>
@@ -57,8 +57,8 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
           </div>
           <div className="text-right">
             <p className="text-sm text-gray-600">필요 크레딧</p>
-            <p className="font-bold text-gray-800">5,000원 이상</p>
-            {user.credits >= 5000 ? (
+            <p className="font-bold text-gray-800">{penaltyAmount.toLocaleString()}원 이상</p>
+            {user.credits >= penaltyAmount ? (
               <span className="text-green-600 text-sm">✅ 설정 가능</span>
             ) : (
               <span className="text-red-600 text-sm">❌ 크레딧 부족</span>
@@ -105,7 +105,7 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="분 선택" />
                 </SelectTrigger>
-                <SelectContent className="max-h-60">
+                <SelectContent>
                   {minuteOptions.map((minute) => (
                     <SelectItem key={minute} value={minute}>
                       {minute}분
@@ -115,59 +115,40 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
               </Select>
             </div>
           </div>
+
+          {/* 반복 설정 버튼들 */}
+          <div className="flex space-x-2 justify-center">
+            <button 
+              onClick={() => setRepeatInterval(0)}
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                repeatInterval === 0
+                  ? 'bg-gradient-to-r from-green-400 to-blue-400 text-white' 
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              한 번만
+            </button>
+            
+            <button 
+              onClick={() => setRepeatInterval(5)}
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                repeatInterval === 5
+                  ? 'bg-gradient-to-r from-orange-400 to-pink-400 text-white' 
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              5분 반복
+            </button>
+          </div>
         </div>
         
         <div className="mt-4 p-3 bg-blue-50 rounded-xl">
           <p className="text-sm text-blue-800">
-            💡 <strong>선택된 시간:</strong> {selectedHour}:{selectedMinute}
+            💡 <strong>선택된 시간:</strong> {selectedHour}:{selectedMinute} {repeatInterval > 0 ? '(5분 간격 반복)' : '(한 번만)'}
           </p>
           <p className="text-xs text-blue-600 mt-1">
             알람 후 10분 뒤 푸시 알림으로 기상 인증이 시작돼요!
           </p>
-        </div>
-      </div>
-
-      {/* 알람 반복 설정 */}
-      <div className="bg-white rounded-2xl p-5 shadow-sm border border-pink-100">
-        <h3 className="font-bold text-gray-800 mb-4 flex items-center">
-          <span className="text-orange-500 mr-2">🔄</span>
-          알람 반복 설정
-        </h3>
-        
-        <div className="space-y-3">
-          <button 
-            onClick={() => setRepeatInterval(0)}
-            className={`w-full p-4 rounded-xl text-left transition-all ${
-              repeatInterval === 0
-                ? 'bg-gradient-to-r from-green-100 to-blue-100 border-2 border-green-300' 
-                : 'bg-gray-50 hover:bg-gray-100'
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-bold text-gray-800">한 번만 울리기</p>
-                <p className="text-sm text-gray-600">설정한 시간에 한 번만 알람이 울려요</p>
-              </div>
-              {repeatInterval === 0 && <span className="text-green-500">✅</span>}
-            </div>
-          </button>
-          
-          <button 
-            onClick={() => setRepeatInterval(5)}
-            className={`w-full p-4 rounded-xl text-left transition-all ${
-              repeatInterval === 5
-                ? 'bg-gradient-to-r from-orange-100 to-pink-100 border-2 border-orange-300' 
-                : 'bg-gray-50 hover:bg-gray-100'
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-bold text-gray-800">5분 간격 반복</p>
-                <p className="text-sm text-gray-600">기상 인증까지 5분마다 반복해서 울려요</p>
-              </div>
-              {repeatInterval === 5 && <span className="text-orange-500">✅</span>}
-            </div>
-          </button>
         </div>
       </div>
 
@@ -261,14 +242,14 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
         
         <button
           onClick={handleSetAlarm}
-          disabled={user.credits < 5000}
+          disabled={user.credits < penaltyAmount}
           className={`w-full py-4 rounded-2xl font-bold text-lg transition-all ${
-            user.credits >= 5000
+            user.credits >= penaltyAmount
               ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:shadow-lg hover:scale-105'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
         >
-          {user.credits >= 5000 ? '🚀 미라클 알람 설정하기!' : '💰 크레딧이 부족해요'}
+          {user.credits >= penaltyAmount ? '🚀 미라클 알람 설정하기!' : '💰 크레딧이 부족해요'}
         </button>
       </div>
     </div>
