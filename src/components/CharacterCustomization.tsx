@@ -8,11 +8,24 @@ interface CharacterCustomizationProps {
 }
 
 const CharacterCustomization = ({ user, setUser }: CharacterCustomizationProps) => {
-  const [selectedCategory, setSelectedCategory] = useState('hats');
+  const [selectedCategory, setSelectedCategory] = useState('colors');
   const [previewCharacter, setPreviewCharacter] = useState(user.character);
+
+  // 캐릭터 색상 옵션들
+  const colorOptions = [
+    { id: 'pink', name: '핑크', color: '#FFB6C1', price: 0, owned: true },
+    { id: 'orange', name: '오렌지', color: '#FFA07A', price: 300, owned: false },
+    { id: 'yellow', name: '노랑', color: '#F0E68C', price: 300, owned: false },
+    { id: 'green', name: '초록', color: '#98FB98', price: 500, owned: false },
+    { id: 'blue', name: '파랑', color: '#87CEEB', price: 500, owned: false },
+    { id: 'purple', name: '보라', color: '#DDA0DD', price: 800, owned: false },
+    { id: 'gray', name: '회색', color: '#D3D3D3', price: 200, owned: false },
+    { id: 'brown', name: '갈색', color: '#DEB887', price: 400, owned: false },
+  ];
 
   // 상점 아이템들
   const shopItems = {
+    colors: colorOptions,
     hats: [
       { id: 'cap', name: '야구모자', price: 500, owned: true, equipped: true },
       { id: 'beanie', name: '비니', price: 800, owned: false, equipped: false },
@@ -34,6 +47,7 @@ const CharacterCustomization = ({ user, setUser }: CharacterCustomizationProps) 
   };
 
   const categories = [
+    { id: 'colors', name: '색상', icon: '🎨' },
     { id: 'hats', name: '모자', icon: '🎩' },
     { id: 'accessories', name: '액세서리', icon: '👓' },
     { id: 'backgrounds', name: '배경', icon: '🏞️' },
@@ -51,57 +65,73 @@ const CharacterCustomization = ({ user, setUser }: CharacterCustomizationProps) 
     }
   };
 
+  const handleColorChange = (color: string) => {
+    const newCharacter = { ...previewCharacter, color };
+    setPreviewCharacter(newCharacter);
+    setUser({
+      ...user,
+      character: newCharacter
+    });
+  };
+
   // 캐릭터 렌더링 함수
-  const renderCharacter = (character: any) => (
-    <svg width="120" height="120" viewBox="0 0 100 100" className="animate-bounce">
-      <g>
-        {/* 고양이 얼굴 */}
-        <ellipse cx="50" cy="55" rx="25" ry="20" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2"/>
-        
-        {/* 귀 */}
-        <path d="M30 40 L35 25 L45 35 Z" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2"/>
-        <path d="M70 40 L65 25 L55 35 Z" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2"/>
-        <path d="M32 35 L37 28 L42 33 Z" fill="#FF1493"/>
-        <path d="M68 35 L63 28 L58 33 Z" fill="#FF1493"/>
-        
-        {/* 눈 */}
-        <ellipse cx="42" cy="50" rx="3" ry="4" fill="#000"/>
-        <ellipse cx="58" cy="50" rx="3" ry="4" fill="#000"/>
-        <ellipse cx="43" cy="49" rx="1" ry="1" fill="#FFF"/>
-        <ellipse cx="59" cy="49" rx="1" ry="1" fill="#FFF"/>
-        
-        {/* 코 */}
-        <path d="M48 58 L52 58 L50 62 Z" fill="#FF1493"/>
-        
-        {/* 입 */}
-        <path d="M50 62 Q45 66 40 64" stroke="#FF1493" strokeWidth="2" fill="none"/>
-        <path d="M50 62 Q55 66 60 64" stroke="#FF1493" strokeWidth="2" fill="none"/>
-        
-        {/* 수염 */}
-        <line x1="25" y1="55" x2="35" y2="56" stroke="#FF1493" strokeWidth="1"/>
-        <line x1="25" y1="60" x2="35" y2="59" stroke="#FF1493" strokeWidth="1"/>
-        <line x1="75" y1="55" x2="65" y2="56" stroke="#FF1493" strokeWidth="1"/>
-        <line x1="75" y1="60" x2="65" y2="59" stroke="#FF1493" strokeWidth="1"/>
-        
-        {/* 장착된 아이템들 */}
-        {character.accessories.includes('hat') && (
-          <>
-            <ellipse cx="50" cy="30" rx="20" ry="8" fill="#4169E1"/>
-            <ellipse cx="50" cy="25" rx="18" ry="6" fill="#6495ED"/>
-            <circle cx="50" cy="20" r="4" fill="#FFD700"/>
-          </>
-        )}
-        
-        {character.accessories.includes('glasses') && (
-          <>
-            <circle cx="42" cy="50" r="8" fill="none" stroke="#000" strokeWidth="2"/>
-            <circle cx="58" cy="50" r="8" fill="none" stroke="#000" strokeWidth="2"/>
-            <line x1="50" y1="48" x2="50" y2="52" stroke="#000" strokeWidth="2"/>
-          </>
-        )}
-      </g>
-    </svg>
-  );
+  const renderCharacter = (character: any) => {
+    const characterColor = character.color || '#FFB6C1';
+    const darkerColor = character.color ? 
+      `hsl(${parseInt(character.color.slice(1, 3), 16)}, ${parseInt(character.color.slice(3, 5), 16)}%, ${Math.max(parseInt(character.color.slice(5, 7), 16) - 20, 0)}%)` : 
+      '#FF69B4';
+    
+    return (
+      <svg width="120" height="120" viewBox="0 0 100 100" className="animate-bounce">
+        <g>
+          {/* 고양이 얼굴 */}
+          <ellipse cx="50" cy="55" rx="25" ry="20" fill={characterColor} stroke={darkerColor} strokeWidth="2"/>
+          
+          {/* 귀 */}
+          <path d="M30 40 L35 25 L45 35 Z" fill={characterColor} stroke={darkerColor} strokeWidth="2"/>
+          <path d="M70 40 L65 25 L55 35 Z" fill={characterColor} stroke={darkerColor} strokeWidth="2"/>
+          <path d="M32 35 L37 28 L42 33 Z" fill="#FF1493"/>
+          <path d="M68 35 L63 28 L58 33 Z" fill="#FF1493"/>
+          
+          {/* 눈 */}
+          <ellipse cx="42" cy="50" rx="3" ry="4" fill="#000"/>
+          <ellipse cx="58" cy="50" rx="3" ry="4" fill="#000"/>
+          <ellipse cx="43" cy="49" rx="1" ry="1" fill="#FFF"/>
+          <ellipse cx="59" cy="49" rx="1" ry="1" fill="#FFF"/>
+          
+          {/* 코 */}
+          <path d="M48 58 L52 58 L50 62 Z" fill="#FF1493"/>
+          
+          {/* 입 */}
+          <path d="M50 62 Q45 66 40 64" stroke="#FF1493" strokeWidth="2" fill="none"/>
+          <path d="M50 62 Q55 66 60 64" stroke="#FF1493" strokeWidth="2" fill="none"/>
+          
+          {/* 수염 */}
+          <line x1="25" y1="55" x2="35" y2="56" stroke="#FF1493" strokeWidth="1"/>
+          <line x1="25" y1="60" x2="35" y2="59" stroke="#FF1493" strokeWidth="1"/>
+          <line x1="75" y1="55" x2="65" y2="56" stroke="#FF1493" strokeWidth="1"/>
+          <line x1="75" y1="60" x2="65" y2="59" stroke="#FF1493" strokeWidth="1"/>
+          
+          {/* 장착된 아이템들 */}
+          {character.accessories && character.accessories.includes('hat') && (
+            <>
+              <ellipse cx="50" cy="30" rx="20" ry="8" fill="#4169E1"/>
+              <ellipse cx="50" cy="25" rx="18" ry="6" fill="#6495ED"/>
+              <circle cx="50" cy="20" r="4" fill="#FFD700"/>
+            </>
+          )}
+          
+          {character.accessories && character.accessories.includes('glasses') && (
+            <>
+              <circle cx="42" cy="50" r="8" fill="none" stroke="#000" strokeWidth="2"/>
+              <circle cx="58" cy="50" r="8" fill="none" stroke="#000" strokeWidth="2"/>
+              <line x1="50" y1="48" x2="50" y2="52" stroke="#000" strokeWidth="2"/>
+            </>
+          )}
+        </g>
+      </svg>
+    );
+  };
 
   return (
     <div className="px-4 py-6 space-y-6">
@@ -156,46 +186,71 @@ const CharacterCustomization = ({ user, setUser }: CharacterCustomizationProps) 
           {categories.find(c => c.id === selectedCategory)?.name} 상점
         </h3>
         
-        <div className="grid grid-cols-2 gap-4">
-          {shopItems[selectedCategory as keyof typeof shopItems].map((item) => (
-            <div key={item.id} className="bg-gray-50 rounded-2xl p-4 text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center mx-auto mb-3">
-                <span className="text-2xl">
-                  {selectedCategory === 'hats' && '🎩'}
-                  {selectedCategory === 'accessories' && '👓'}
-                  {selectedCategory === 'backgrounds' && '🏞️'}
-                </span>
-              </div>
-              
-              <h4 className="font-bold text-gray-800 mb-1">{item.name}</h4>
-              <p className="text-sm text-gray-600 mb-3">{item.price.toLocaleString()}원</p>
-              
-              {item.owned ? (
-                <button 
-                  className={`w-full py-2 rounded-xl font-bold transition-all ${
-                    item.equipped 
-                      ? 'bg-green-500 text-white' 
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  {item.equipped ? '✅ 착용중' : '착용하기'}
-                </button>
-              ) : (
+        {selectedCategory === 'colors' ? (
+          <div className="grid grid-cols-4 gap-4">
+            {colorOptions.map((color) => (
+              <div key={color.id} className="text-center">
                 <button
-                  onClick={() => handlePurchase(item)}
-                  disabled={user.credits < item.price}
-                  className={`w-full py-2 rounded-xl font-bold transition-all ${
-                    user.credits >= item.price
-                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:shadow-lg'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  onClick={() => color.owned ? handleColorChange(color.color) : handlePurchase(color)}
+                  className={`w-16 h-16 rounded-full border-4 transition-all ${
+                    previewCharacter.color === color.color 
+                      ? 'border-purple-500 scale-110' 
+                      : 'border-gray-300 hover:border-gray-400'
                   }`}
-                >
-                  💰 구매하기
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
+                  style={{ backgroundColor: color.color }}
+                />
+                <p className="text-sm font-bold text-gray-800 mt-2">{color.name}</p>
+                {!color.owned && (
+                  <p className="text-xs text-gray-500">{color.price.toLocaleString()}원</p>
+                )}
+                {color.owned && previewCharacter.color === color.color && (
+                  <p className="text-xs text-green-600">착용중</p>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-4">
+            {shopItems[selectedCategory as keyof typeof shopItems].map((item: any) => (
+              <div key={item.id} className="bg-gray-50 rounded-2xl p-4 text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-2xl">
+                    {selectedCategory === 'hats' && '🎩'}
+                    {selectedCategory === 'accessories' && '👓'}
+                    {selectedCategory === 'backgrounds' && '🏞️'}
+                  </span>
+                </div>
+                
+                <h4 className="font-bold text-gray-800 mb-1">{item.name}</h4>
+                <p className="text-sm text-gray-600 mb-3">{item.price.toLocaleString()}원</p>
+                
+                {item.owned ? (
+                  <button 
+                    className={`w-full py-2 rounded-xl font-bold transition-all ${
+                      item.equipped 
+                        ? 'bg-green-500 text-white' 
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {item.equipped ? '✅ 착용중' : '착용하기'}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handlePurchase(item)}
+                    disabled={user.credits < item.price}
+                    className={`w-full py-2 rounded-xl font-bold transition-all ${
+                      user.credits >= item.price
+                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:shadow-lg'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                  >
+                    💰 구매하기
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 내 컬렉션 */}

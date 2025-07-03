@@ -18,7 +18,8 @@ const Index = () => {
     consecutiveDays: 5,
     character: {
       type: 'cat',
-      accessories: ['hat', 'glasses']
+      accessories: ['hat', 'glasses'],
+      color: '#FFB6C1' // 기본 핑크 색상
     },
     userType: 'student' // 'worker', 'student', 'exam-taker'
   });

@@ -19,56 +19,63 @@ const MainDashboard = ({ user, setUser }: MainDashboardProps) => {
   const expectedReward = todaySuccessUsers > 0 ? Math.floor(totalFailureAmount / todaySuccessUsers) : 0;
 
   // 캐릭터 렌더링 함수
-  const renderCharacter = (character: any) => (
-    <svg width="80" height="80" viewBox="0 0 100 100" className="animate-bounce">
-      <g>
-        {/* 고양이 얼굴 */}
-        <ellipse cx="50" cy="55" rx="25" ry="20" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2"/>
-        
-        {/* 귀 */}
-        <path d="M30 40 L35 25 L45 35 Z" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2"/>
-        <path d="M70 40 L65 25 L55 35 Z" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2"/>
-        <path d="M32 35 L37 28 L42 33 Z" fill="#FF1493"/>
-        <path d="M68 35 L63 28 L58 33 Z" fill="#FF1493"/>
-        
-        {/* 눈 */}
-        <ellipse cx="42" cy="50" rx="3" ry="4" fill="#000"/>
-        <ellipse cx="58" cy="50" rx="3" ry="4" fill="#000"/>
-        <ellipse cx="43" cy="49" rx="1" ry="1" fill="#FFF"/>
-        <ellipse cx="59" cy="49" rx="1" ry="1" fill="#FFF"/>
-        
-        {/* 코 */}
-        <path d="M48 58 L52 58 L50 62 Z" fill="#FF1493"/>
-        
-        {/* 입 */}
-        <path d="M50 62 Q45 66 40 64" stroke="#FF1493" strokeWidth="2" fill="none"/>
-        <path d="M50 62 Q55 66 60 64" stroke="#FF1493" strokeWidth="2" fill="none"/>
-        
-        {/* 수염 */}
-        <line x1="25" y1="55" x2="35" y2="56" stroke="#FF1493" strokeWidth="1"/>
-        <line x1="25" y1="60" x2="35" y2="59" stroke="#FF1493" strokeWidth="1"/>
-        <line x1="75" y1="55" x2="65" y2="56" stroke="#FF1493" strokeWidth="1"/>
-        <line x1="75" y1="60" x2="65" y2="59" stroke="#FF1493" strokeWidth="1"/>
-        
-        {/* 장착된 아이템들 */}
-        {character.accessories.includes('hat') && (
-          <>
-            <ellipse cx="50" cy="30" rx="20" ry="8" fill="#4169E1"/>
-            <ellipse cx="50" cy="25" rx="18" ry="6" fill="#6495ED"/>
-            <circle cx="50" cy="20" r="4" fill="#FFD700"/>
-          </>
-        )}
-        
-        {character.accessories.includes('glasses') && (
-          <>
-            <circle cx="42" cy="50" r="8" fill="none" stroke="#000" strokeWidth="2"/>
-            <circle cx="58" cy="50" r="8" fill="none" stroke="#000" strokeWidth="2"/>
-            <line x1="50" y1="48" x2="50" y2="52" stroke="#000" strokeWidth="2"/>
-          </>
-        )}
-      </g>
-    </svg>
-  );
+  const renderCharacter = (character: any) => {
+    const characterColor = character.color || '#FFB6C1';
+    const darkerColor = character.color ? 
+      `hsl(${parseInt(character.color.slice(1, 3), 16)}, ${parseInt(character.color.slice(3, 5), 16)}%, ${Math.max(parseInt(character.color.slice(5, 7), 16) - 20, 0)}%)` : 
+      '#FF69B4';
+    
+    return (
+      <svg width="80" height="80" viewBox="0 0 100 100" className="animate-bounce">
+        <g>
+          {/* 고양이 얼굴 */}
+          <ellipse cx="50" cy="55" rx="25" ry="20" fill={characterColor} stroke={darkerColor} strokeWidth="2"/>
+          
+          {/* 귀 */}
+          <path d="M30 40 L35 25 L45 35 Z" fill={characterColor} stroke={darkerColor} strokeWidth="2"/>
+          <path d="M70 40 L65 25 L55 35 Z" fill={characterColor} stroke={darkerColor} strokeWidth="2"/>
+          <path d="M32 35 L37 28 L42 33 Z" fill="#FF1493"/>
+          <path d="M68 35 L63 28 L58 33 Z" fill="#FF1493"/>
+          
+          {/* 눈 */}
+          <ellipse cx="42" cy="50" rx="3" ry="4" fill="#000"/>
+          <ellipse cx="58" cy="50" rx="3" ry="4" fill="#000"/>
+          <ellipse cx="43" cy="49" rx="1" ry="1" fill="#FFF"/>
+          <ellipse cx="59" cy="49" rx="1" ry="1" fill="#FFF"/>
+          
+          {/* 코 */}
+          <path d="M48 58 L52 58 L50 62 Z" fill="#FF1493"/>
+          
+          {/* 입 */}
+          <path d="M50 62 Q45 66 40 64" stroke="#FF1493" strokeWidth="2" fill="none"/>
+          <path d="M50 62 Q55 66 60 64" stroke="#FF1493" strokeWidth="2" fill="none"/>
+          
+          {/* 수염 */}
+          <line x1="25" y1="55" x2="35" y2="56" stroke="#FF1493" strokeWidth="1"/>
+          <line x1="25" y1="60" x2="35" y2="59" stroke="#FF1493" strokeWidth="1"/>
+          <line x1="75" y1="55" x2="65" y2="56" stroke="#FF1493" strokeWidth="1"/>
+          <line x1="75" y1="60" x2="65" y2="59" stroke="#FF1493" strokeWidth="1"/>
+          
+          {/* 장착된 아이템들 */}
+          {character.accessories && character.accessories.includes('hat') && (
+            <>
+              <ellipse cx="50" cy="30" rx="20" ry="8" fill="#4169E1"/>
+              <ellipse cx="50" cy="25" rx="18" ry="6" fill="#6495ED"/>
+              <circle cx="50" cy="20" r="4" fill="#FFD700"/>
+            </>
+          )}
+          
+          {character.accessories && character.accessories.includes('glasses') && (
+            <>
+              <circle cx="42" cy="50" r="8" fill="none" stroke="#000" strokeWidth="2"/>
+              <circle cx="58" cy="50" r="8" fill="none" stroke="#000" strokeWidth="2"/>
+              <line x1="50" y1="48" x2="50" y2="52" stroke="#000" strokeWidth="2"/>
+            </>
+          )}
+        </g>
+      </svg>
+    );
+  };
 
   return (
     <div className="px-4 py-6 space-y-6">
