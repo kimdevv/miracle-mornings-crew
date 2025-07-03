@@ -122,7 +122,7 @@ const AlarmSetting = ({ user, setUser }: AlarmSettingProps) => {
             💡 <strong>선택된 시간:</strong> {selectedHour}:{selectedMinute}
           </p>
           <p className="text-xs text-blue-600 mt-1">
-            알람 후 2분 뒤 푸시 알림으로 기상 인증이 시작돼요!
+            알람 후 10분 뒤 푸시 알림으로 기상 인증이 시작돼요!
           </p>
         </div>
       </div>
